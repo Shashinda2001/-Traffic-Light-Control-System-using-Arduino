@@ -17,7 +17,15 @@ const unsigned long yellowBlinkInterval = 1000; // Yellow blink interval in mill
 const unsigned long yellowBlinkDuration = 3000; // Total yellow blink duration in milliseconds
 const unsigned long pedestrianCrossDuration = 5000; // Duration pedestrian light is green
 
-
+// State variables
+bool lastButtonState = LOW;
+bool buttonState = LOW;
+unsigned long lastDebounceTime = 0;
+bool pedestrianGreenOn = false;
+bool vehicleGreenOn = true;
+unsigned long yellowBlinkStartTime = 0;
+bool yellowBlinking = false;
+unsigned long pedestrianCrossStartTime = 0;
 void setup() {
   // put your setup code here, to run once:
    
