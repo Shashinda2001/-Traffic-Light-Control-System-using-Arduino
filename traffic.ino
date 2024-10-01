@@ -41,8 +41,89 @@ void setup() {
 }
 
 void loop() {
+  // Read button state
+  bool reading = digitalRead(buttonPin);
+
+  // Handle button debounce
+  if (reading != lastButtonState) {
+    lastDebounceTime = millis();
+  }
+
+  if ((millis() - lastDebounceTime) > buttonDebounceDelay) {
+    if (reading != buttonState) {
+      buttonState = reading;
+      
+      // Button press detected
+      if (buttonState == LOW) {
+        startSequence();
+      }
+    }
+  }
+
+  lastButtonState = reading;
+
+  // Handle yellow light blinking
+  if (yellowBlinking) {
+    if (millis() - yellowBlinkStartTime < yellowBlinkDuration) {
+      if ((millis() - yellowBlinkStartTime) % (2 * yellowBlinkInterval) < yellowBlinkInterval) {
+        digitalWrite(yellowVehiclePin, HIGH); // Yellow light ON
+      } else {
+        digitalWrite(yellowVehiclePin, LOW); // Yellow light OFF
+      }
+    } else {
+      stopSequence();
+    }
+  }
   
- 
+  // Handle pedestrian crossing duration
+  if (pedestrianGreenOn && (millis() - pedestrianCrossStartTime > pedestrianCrossDuration)) {
+    digitalWrite(greenPedestrianPin, LOW); // Turn off pedestrian green light
+    digitalWrite(redPedestrianPin, HIGH); // Turn pedestrian red light back on
+  }
+}
+
+void initializeLights() {
+  // Set initial state
+  digitalWrite(redPedestrianPin, HIGH); // Pedestrian red light ON
+  digitalWrite(greenPedestrianPin, LOW); // Pedestrian green light OFF
+  digitalWrite(redVehiclePin, LOW); // Vehicle red light OFF
+  digitalWrite(yellowVehiclePin, LOW); // Vehicle yellow light OFF
+  digitalWrite(greenVehiclePin, HIGH); // Vehicle green light ON
+}
+
+void startSequence() {
+  // Start vehicle light change sequence
+  delay(vehicleGreenToYellowDelay); // Wait 2 seconds before changing vehicle lights
+
+  // Change vehicle green light to yellow
+  digitalWrite(greenVehiclePin, LOW); // Vehicle green light OFF
+  digitalWrite(yellowVehiclePin, HIGH); // Vehicle yellow light ON
+  yellowBlinkStartTime = millis();
+  yellowBlinking = true;
+
+  // Change pedestrian lights
+  digitalWrite(redPedestrianPin, LOW); // Pedestrian red light OFF
+  digitalWrite(greenPedestrianPin, HIGH); // Pedestrian green light ON
+  pedestrianGreenOn = true;
+  pedestrianCrossStartTime = millis(); // Start the pedestrian crossing timer
+}
+
+void stopSequence() {
+  // Turn off yellow light and restore vehicle lights
+  digitalWrite(yellowVehiclePin, LOW); // Vehicle yellow light OFF
+  digitalWrite(redVehiclePin, HIGH); // Vehicle red light ON
+  yellowBlinking = false;
+
+  // After yellow blinking, turn off pedestrian green light and turn on pedestrian red light
+  digitalWrite(greenPedestrianPin, LOW); // Pedestrian green light OFF
+  digitalWrite(redPedestrianPin, HIGH); // Pedestrian red light ON
+
+  // Ensure vehicle green light is restored to initial state
+  delay(vehicleGreenToYellowDelay); // Ensure vehicle red light is ON for some time
+  digitalWrite(greenVehiclePin, HIGH); // Vehicle green light ON
+
+  // Reset system to initial state
+  initializeLights();
 }
 
 //
