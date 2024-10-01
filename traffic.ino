@@ -3,6 +3,12 @@
 const int redPedestrianPin = 8;
 const int greenPedestrianPin = 9;
 
+
+// Pin definitions for vehicle path
+const int redVehiclePin = 10;
+const int yellowVehiclePin = 11;
+const int greenVehiclePin = 12;
+
 void setup() {
   // put your setup code here, to run once:
    
