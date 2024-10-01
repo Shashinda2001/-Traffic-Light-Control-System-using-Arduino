@@ -27,12 +27,6 @@ unsigned long yellowBlinkStartTime = 0;
 bool yellowBlinking = false;
 unsigned long pedestrianCrossStartTime = 0;
 void setup() {
-  // put your setup code here, to run once:
-   
-}
-
-void loop() {
-  
  // Set all pins as output or input
   pinMode(redPedestrianPin, OUTPUT);
   pinMode(greenPedestrianPin, OUTPUT);
@@ -43,6 +37,12 @@ void loop() {
 
   // Initialize LEDs
   initializeLights();
+   
+}
+
+void loop() {
+  
+ 
 }
 
 //
