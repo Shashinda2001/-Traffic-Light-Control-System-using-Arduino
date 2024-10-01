@@ -32,8 +32,17 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  
+ // Set all pins as output or input
+  pinMode(redPedestrianPin, OUTPUT);
+  pinMode(greenPedestrianPin, OUTPUT);
+  pinMode(redVehiclePin, OUTPUT);
+  pinMode(yellowVehiclePin, OUTPUT);
+  pinMode(greenVehiclePin, OUTPUT);
+  pinMode(buttonPin, INPUT_PULLUP);
 
+  // Initialize LEDs
+  initializeLights();
 }
 
 //
